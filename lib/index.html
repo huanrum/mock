@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<header>
+  <meta charset="UTF-8">
+  <title>Mock API</title>
+  <script>window.$data = {};</script>
+  <style>
+    @keyframes flicker {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .config-group {
+      margin: 1em;
+    }
+
+    .config-group legend:hover {
+      cursor: pointer;
+      color: #99ff99;
+    }
+
+    .config-item {
+      margin: 1em;
+    }
+
+    .config-item sub {
+      color: #ff9999;
+    }
+
+    .config-item .config-url>* {
+      display: inline-block;
+      min-width: 6em;
+      font-weight: bold;
+    }
+
+    .config-item .config-url:hover {
+      cursor: pointer;
+      opacity: 0.6;
+    }
+
+    .config-item .config-return {
+      margin: 0.5em 0 0 6em;
+      min-height: 6em;
+      width: calc(100% - 8em);
+      background: #d3d3d3;
+    }
+
+    /*dialog*/
+
+    .common-dialog-back {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(123, 123, 123, 0.6);
+    }
+
+    .common-dialog-Message {
+      position: absolute;
+      margin-left: 80%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      padding: 2px;
+      border-radius: 10px;
+      background: #669966;
+    }
+
+    .common-dialog-back .common-dialog {
+      position: absolute;
+      margin-left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      padding: 2px;
+      border-radius: 10px;
+      background: #f3f3f3;
+    }
+
+    .common-dialog-back .common-dialog.max-window {
+      width: 96%;
+      height: 96%;
+      left: 2% !important;
+      top: 2% !important;
+      margin-left: 0;
+      transform: none;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-header {
+      position: relative;
+      height: 2em;
+      background: #666699;
+      color: #ffffff;
+      padding: 0.5em 4em 0.5em 1em;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-header label {
+      margin-right: 40px;
+      color: #ffffff;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-header label sup {
+      color: rgba(168, 168, 168, 0.4);
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-header a {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      right: 0;
+      top: 16px;
+      cursor: pointer;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-header a:hover:before,
+    .common-dialog-back .common-dialog .common-dialog-header a:hover:after {
+      border-bottom: 2px solid red;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-header a:before,
+    .common-dialog-back .common-dialog .common-dialog-header a:after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 0;
+      content: '';
+      border-bottom: 2px solid #ffffff;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-header a:before {
+      transform: rotate(45deg);
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-header a:after {
+      transform: rotate(-45deg);
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-content {
+      position: relative;
+      max-height: 33em;
+      min-width: 12em;
+      overflow: auto;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-content>* {
+      margin: 0.3em;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-content div div {
+      display: inline-block;
+      width: 12em;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-content div input {
+      width: calc(100% - 16em);
+      background: #f3f3f3;
+      border: none;
+      border-bottom: 1px solid #666699;
+      outline: none;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-content .mock-setting-Panel p:hover {
+      background: #d3d3d3;
+      color: white;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-message {
+      position: relative;
+      width: calc(100% - 1rem);
+      height: 100%;
+      background: #d3d3d3;
+      margin: 0.5em;
+      min-width: 400px;
+      max-height: 33em;
+      min-height: 10em;
+      overflow: auto;
+      outline: none;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-footer {
+      position: relative;
+      border-top: 1px solid #d3d3d3;
+      text-align: center;
+      padding: 5px;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-footer a {
+      border: 1px solid #666699;
+      margin: 2px 1em;
+      padding: 1px;
+      cursor: pointer;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-footer a:hover {
+      opacity: 0.8;
+      color: #00aaef;
+    }
+
+    .common-dialog-back .common-dialog .common-dialog-content .loading {
+      animation: flicket 1s infinite;
+    }
+
+    .reset-button {
+      position: fixed;
+      z-index: 9999;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(90%);
+      cursor: pointer;
+      border-radius: 6px;
+      border: 1px solid #00aaef;
+      padding: 2px 10px;
+      background: #d3d3d3;
+      transition: all 1s;
+    }
+
+    .reset-button:hover {
+      background: #00aaef;
+      color: #ffffff;
+      transform: translate(-20%, -20%);
+      padding: 30px;
+    }
+  </style>
+</header>
+
+<body>
+  <div style="text-align: center;font-size: 26px;">
+    You can click on the method to set the status returned by the API access.
+  </div>
+  <script>
+    var reset = document.createElement('a');
+    reset.className = 'reset-button';
+    reset.innerHTML = 'Reset All';
+    reset.title = 'reset all mockTimeout and mockStatus';
+    document.body.appendChild(reset);
+
+    var panel = document.createElement('div');
+    document.body.appendChild(panel);
+
+    /*****Below is the API view*****/
+    var methodColor = {
+      GET: '#337733',
+      POST: '#CCCC66',
+      PUT: '#66CCCC',
+      DELETE: '#FF3333'
+    };
+
+    reset.onclick = function () {
+      window.fetch(location.pathname + '?mockStatus=&mockTimeout=', { method: 'POST' }).then(function () {
+        location.reload();
+      })
+    };
+
+    const supportTab = (function () {
+      var isChild = function (c) {
+        while (c && c !== document.body.parentElement) {
+          if (c === (supportTab.panel || document.body)) {
+            return true;
+          }
+          c = c.parentNode;
+        }
+        return false;
+      };
+      window.onkeyup = function (e) {
+        if (e.keyCode === 27) {
+          if (supportTab.onover) {
+            supportTab.onover();
+          }
+        }
+        if (e.keyCode === 9) {
+          if (!isChild(e.target)) {
+            (supportTab.panel || document.body).querySelector('input,button,textarea,select,[tabindex]').focus();
+          }
+        }
+      };
+
+      return function () {
+        Array.prototype.forEach.call(arguments, function (dom) {
+          dom.tabindex = 0;
+          dom.onkeypress = function (e) {
+            if ([13, 32].indexof(e.keyCode) !== -1) {
+              dom.click();
+            }
+          }
+        });
+      }
+    })();
+
+    supportTab(reset);
+    Object.keys(window.$data).forEach(function (key) {
+      panel.appendChild(createGroup(key, window.$data[key].filter(function (i) {
+        if (/^:/.test(key)) { return true; }
+        return !Object.keys(window.$data).flter(function (f) {
+          return /^:/.test(f) && window.$data[f].filter(function (item) {
+            return i.method === item.method && i.url === item.url;
+          });
+        }).length;
+      })))
+    });
+
+    function createGroup(filename, items) {
+      var fieldset = document.createElement('fieldset');
+      var legend = document.createElement('legend');
+      var content = document.createElement('div');
+
+      var charCount = 0;
+      Array.prototype.forEach.call('' + filename.file.split(/[\\\/]/).pop(), function (i) {
+        charCount = charCount + i.charCodeAt();
+      });
+      fieldset.className = 'config-group';
+      legend.title = filename;
+      legend.innerHTML = filename.split(/[\/\\]/).filter(function (i) { return !!i; }).pop();
+      legend.style.color = '#' + new Date(10000).setYear(charCount).toString(16).slice(-8, -2);
+
+      items.forEach(function (item) {
+        content.appendChild(createItem(item));
+      });
+
+
+      content.style.display = (!localStorage.openFieldset || new RegExp(legend.innerHTML).test(localStorage.openFieldset)) ? 'block' : 'none';
+      if (!Object.keys(items).length) {
+        content.innerHTML = '<div style="text-align:center;">All content is overwritten</div>';
+        legend.style.textDecoration = 'line-through';
+        content.style.display = 'none';
+      }
+
+      fieldset.appendChild(legend);
+      fieldset.appendChild(content);
+      legend.onclick = function () {
+        content.style.display = content.style.display === 'none' ? 'block' : 'none';
+        localStorage.openFieldset = localStorage.openFieldset ? localStorage.openFieldset.replace(legend.innerHTML, '') : '';
+        if (content.style.display === 'block') {
+          localStorage.openFieldset += (',' + legend.innerHTML);
+        }
+        localStorage.openFieldset = localStorage.openFieldset.replace(/\,+/g, ',').replace(/^,/, '');
+      };
+
+      return fieldset;
+    }
+
+    function createItem(option) {
+      var getMockTimeout = () => option.mockTimeout || option.__mockTimeout || '';
+      var parent = document.createElement('div');
+      var urlElement = document.createElement('div');
+
+      var method = document.createElement('div');
+      var url = document.createElement('div');
+      var timeout = document.createElement('a');
+      var status = document.createElement('a');
+
+      parent.className = 'config-item';
+      urlElement.className = 'config-url';
+
+      method.innerHTML = (methodData && methodData[1] || 'GET').toLocaleUpperCase();
+      method.title = 'set mockTimeout and mockStatus'
+      timeout.innerHTML = getMockTimeout() || '';
+      status.innerHTML = option.mockStatus || '';
+      method.appendChild(timeout);
+      method.appendChild(status);
+      method.style = 'position: relative;color:' + methodColor[(option.method || 'GET').toLocaleUpperCase()];
+      timeout.style = 'position: absolute;top:-8px;color:#d3d3d3;';
+
+      url.innerHTML = option.url.split('?').join('<i style="font-size:10px;color:#d3d3d3;">?') + '</i>';
+      url.title = 'debug api for mockStatus';
+
+      supportTab(method, url);
+
+      urlElement.appendChild(method);
+      urlElement.appendChild(url);
+      parent.appendChild(urlElement);
+
+      url.onclick = function () {
+        var functionParams = (option.config instanceof Array && option.config.filter(function(i){return i.id === option.mockStatus;}).pop() || option);
+        var callFetch = function(url, params, inputs){
+          if(!params && (!inputs || !inputs.length)) {
+            return window.fetch(url, {method: option.method, headers: {mockStatus: option.mockStatus}})
+          }
+          var headers = {};
+          var qs = '';
+          var body = undefined;
+          (params || '').split('&').concat(inputs).filter(Boolean).forEach(function(p){
+            if(/^headers\./.test(p)) {
+              headers[p.split('=')[0].replace(/^body\./,'')] = p.split('=')[1];
+            }
+            if(/^query\./.test(p)) {
+              qs += (qs ? '&' : '') + p.replace(/^query\./, '');
+            }
+            if(/^body\./.test(p)) {
+              body = body || {};
+              body[p.split('=')[0].replace(/^body\./,'')] = p.split('=')[1];
+            }
+
+            url = url.replace(':' + p.split('=')[0], p.split('=')[1]);
+          });
+          if(['GET','HEADER'].indexOf(option.method.toUpperCase()) !== -1) {
+            body = undefined;
+          }
+          return window.fetch(url + (qs?'?':'') + qs, {method: option.method, headers: Object.assign({
+            'Content-Type': 'application/json',
+            mockStatus: option.mockStatus
+          }, headers), body: body && JSON.stringify(body)})
+        };
+
+        var content = document.createElement('div');
+        var parmsPanel = document.createElement('p');
+        var returnElement = document.createElement('textarea');
+        var updateData = function(inputs){
+          content.className = content.className + ' loading';
+          callFetch(option.url.split('?')[0], option.url.split('?')[1], inputs).then(function(i){return i.text();}).then(function(res){
+            try{
+              returnElement.value = JSON.stringify(JSON.parse(res), null, 2);
+            }catch(e){
+              returnElement.value = res;
+            }
+            setTimeout(function(){
+              returnElement.style.height = returnElement.scrollHeight + 'px';
+              content.className = content.className.replace(/\s+loading/g, '');
+            });
+          }).catch(function(e){
+            console.log(e);
+          });
+          setTimeout(function(){
+            returnElement.style.height = (returnElement.scrollHeight - 8) + 'px';
+          });
+        }
+
+        var createParamItem = function(param){
+          var paramRow = document.createElement('div');
+          var paramLabel = document.createElement('label');
+          var paramInput = document.createElement('input');
+          paramRow.appendChild(paramLabel);
+          paramRow.appendChild(paramInput);
+
+          paramRow.style = 'text-align:center;width:80%;margin:6px 10%;display:flex;justify-content:apace-between;';
+          paramLabel.innerHTML = param + (/\./.test(param) ? '' : '<strong>*</strong>');
+          paramInput.name = param;
+          return paramRow;
+        };
+
+        content.appendChild(parmsPanel);
+        content.appendChild(returnElement);
+
+        returnElement.readOnly = true;
+        returnElement.value = ' please input some params !';
+        returnElement.className = 'config-return';
+        returnElement.style = 'resize:none;width:98%;min-height:200px;margin-top:20px;background:#d3d3d3;';
+
+        var urlParams = option.url.match(/(?<=:)[^\/]+/g) || [];
+        var paramList = functionParams.params instanceof Array ? functionParams.params.concat(urlParams) : [];
+        if(functionParams.params && functionParams.params.length) {
+          parmsPanel.title = functionParams.func || '';
+        }
+        if(paramList.length) {
+          paramList.forEach(function(param){
+            parmsPanel.appendChild(createParamItem(param));
+          });
+        } else {
+          updateData([]);
+        }
+
+        showDialog('<strong style="color:#ff9999;font-size:14px;">' + (option.mackStatus||'') + '</strong>' + option.url, content, [option.method], function(){
+          if(!urlParams.filter(function(i){return !parmsPanel.querySelector('[name="' + i + '"]').value;}).length) {
+            updateData(Array.prototype.map.call(parmsPanel.querySelectorAll('input'), function(i){return i.name + '=' + i.value;}));
+          } else {
+            returnElement.style.height = 'auto';
+            returnElement.value = 'Please enter required parameters';
+          }
+          return false;
+        });
+      };
+      method.onclick = function () {
+        var mockPanel = document.createElement('div');
+        var mockTimeout = document.createElement('div');
+        var mockTimeoutLabel = document.createElement('label');
+        var mockTimeoutInput = document.createElement('input');
+        var mockStatus = document.createElement('div');
+        var mockStatusLabel = document.createElement('label');
+        var mockStatusInput = document.createElement('input');
+        var mockStatusOption = document.createElement('div');
+        mockTimeout.appendChild(mockTimeoutLabel);
+        mockTimeout.appendChild(mockTimeoutInput);
+        mockStatus.appendChild(mockStatusLabel);
+        mockStatus.appendChild(mockStatusInput);
+        mockPanel.appendChild(mockTimeout);
+        mockPanel.appendChild(mockStatus);
+        mockPanel.appendChild(mockStatusOption);
+        mockTimeoutLabel.innerHTML = 'mokTimeout<sub>ms</sub> : ';
+        mockStatusLabel.innerHTML = 'mockStatus: ';
+        mockTimeoutInput.type = 'number';
+        mockTimeoutInput.value = getMockTimeout() || '';
+        mockStatusInput.value = option.mackStatus || '';
+        mockStatusOption.readOnly = true;
+        mockPanel.className = 'mock-setting-Panel';
+        mockStatus.style = 'text-align:center;width:80%;margin:6px 10%;display:flex;justify-content:apace-between;';
+        mockTimeout.style = 'text-align:center;width:80%;margin:6px 10%;display:flex;justify-content:apace-between;';
+        mockStatusOption.style = 'width:96%;margin-top:20px;padding:16px;background:#d3d3d3;';
+        if(option.config instanceof Array) {
+          option.config.forEach(function(oc){
+            var cfRow = document.createElement('div');
+            var cfLabel = document.createElement('label');
+            var cfInfo = document.createElement('span');
+            cfRow.appendChild(cfLabel);
+            cfRow.appendChild(cfInfo);
+            mockStatusOption.appendChild(cfRow);
+            var cfRowStyle = 'display:flex;justify-content:apace-between;border-bottom:1px solid #dddddd;padding-bottom: 6px;';
+            if(/[=>]/.test(oc.id)) {
+              cfRow.style = cfRowStyle + ';color:#999999;';
+              cfRow.title = 'This is a judgment mothod, please refer to the key of th source code for the logic';
+            } else {
+              cfRow.style = cfRowStyle;
+              cfLabel.style = ';cursor:pointer;text-decoration: uuderline #f3f3f3;';
+              cfRow.onclick = function(){
+                mockStatusInput.value = oc.id;
+              };
+              supportTab(cfLabel);
+            }
+            cfLabel.innerHTML = oc.id;
+            cfInfo.innerHTML = oc.message;
+          });
+        } else {
+          mockStatusOption.innerHTML = option.config || 'Only supportd general exception status: such as 404, 500, etc.';
+        }
+        setTimeout(function(){
+          mockStatusOption.style.height = mockStatusOption.scrollHeight + 'px';
+        });
+        showDialog('Setting (<strong>' + option.method + ':</strong>' + option.url + ')', mockPanel, (option.mockStatus ? ['Reset','Save']:['Save']), function(index){
+          var mockTimeout = (!getMockTimeout() || index) ? mockTimeoutInput.value : null;
+          var mockStatus = (!option.mockStatus || index) ? mockStatusInput.value : null;
+          window.fetch(location.pathname + '?mockStatus=' + (mockStatus||'') + '&mockTimeout=' + (mockTimeout||''), getFetchOption(option)).then(function(){
+            option.mockTimeout = mockTimeout;
+            option.mockStatus = mockStatus;
+            timeout.innerHTML = mockTimeout || '';
+            status.innerHTML = mockStatus || '';
+          })
+        });
+      };
+
+      return parent;
+    }
+
+    function getFetchOption(data) {
+      return {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }
+    }
+
+    function showDialog(title, message, btns, callback) {
+      var dialogBack = document.createElement('div');
+      var dialog = document.createElement('div');
+      var header = document.createElement('div');
+      var content = document.createElement('div');
+      var footer = document.createElement('div');
+
+      var clossBtn = document.createElement('a');
+
+      dialogBack.className = 'modal-dialog-back';
+      dialog.className = 'modal-dialog';
+      header.className = 'modal-dialog-header';
+      content.className = 'modal-dialog-content';
+      footer.className = 'modal-dialog-footer';
+
+      dialog.appendChild(header);
+      dialog.appendChild(content);
+      dialog.appendChild(footer);
+      dialogBack.appendChild(dialog);
+      document.body.appendChild(dialogBack);
+      document.body.style.overflow = 'hidden';
+
+      header.innerHTML = title;
+      header.appendChild(clossBtn);
+      if (typeof message === 'string') {
+        content.innerHTML = message;
+      } else if (typeof message === 'function') {
+        message(header, content, footer);
+      } else {
+        content.appendChild(message);
+      }
+
+      header.ondblclick = function () {
+        if (/max-dialog/.test(dialog.className)) {
+          dialog.className = dialog.className.replace(/\s+max\-dialog/, '');
+        } else {
+          dialog.className += ' max-dialog';
+        }
+      };
+
+      clossBtn.onclick = function () {
+        supportTab.panel = null;
+        if (dialogBack.parentNode) {
+          dialogBack.parentNode.removeChild(dialogBack);
+          document.body.style.overflow = '';
+        }
+      };
+
+      supportTab.panel = dialogBack;
+      supportTab.panel.onover = clossBtn.onclick;
+
+      (btns || ['Cancel']).forEach(function (btn, index) {
+        var button = document.createElement('a');
+        button.innerHTML = btn;
+        footer.appendChild(button);
+        button.onclick = function () {
+          if (!btns || callback(index, content) !== false) {
+            clossBtn.onclick();
+          }
+        };
+        supportTab(button);
+      });
+
+      supportTab(clossBtn);
+      return clossBtn.onclick;
+    }
+
+  </script>
+</body>
+
+</html>
