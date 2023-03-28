@@ -56,7 +56,7 @@
 
     /*dialog*/
 
-    .common-dialog-back {
+    .modal-dialog-back {
       position: fixed;
       top: 0;
       left: 0;
@@ -65,7 +65,7 @@
       background: rgba(123, 123, 123, 0.6);
     }
 
-    .common-dialog-Message {
+    .modal-dialog-Message {
       position: absolute;
       margin-left: 80%;
       top: 50%;
@@ -75,7 +75,7 @@
       background: #669966;
     }
 
-    .common-dialog-back .common-dialog {
+    .modal-dialog-back .modal-dialog {
       position: absolute;
       margin-left: 50%;
       top: 50%;
@@ -85,7 +85,7 @@
       background: #f3f3f3;
     }
 
-    .common-dialog-back .common-dialog.max-window {
+    .modal-dialog-back .modal-dialog.max-window {
       width: 96%;
       height: 96%;
       left: 2% !important;
@@ -94,7 +94,7 @@
       transform: none;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-header {
+    .modal-dialog-back .modal-dialog .modal-dialog-header {
       position: relative;
       height: 2em;
       background: #666699;
@@ -104,16 +104,16 @@
       border-top-right-radius: 10px;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-header label {
+    .modal-dialog-back .modal-dialog .modal-dialog-header label {
       margin-right: 40px;
       color: #ffffff;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-header label sup {
+    .modal-dialog-back .modal-dialog .modal-dialog-header label sup {
       color: rgba(168, 168, 168, 0.4);
     }
 
-    .common-dialog-back .common-dialog .common-dialog-header a {
+    .modal-dialog-back .modal-dialog .modal-dialog-header a {
       position: absolute;
       width: 30px;
       height: 30px;
@@ -122,13 +122,13 @@
       cursor: pointer;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-header a:hover:before,
-    .common-dialog-back .common-dialog .common-dialog-header a:hover:after {
+    .modal-dialog-back .modal-dialog .modal-dialog-header a:hover:before,
+    .modal-dialog-back .modal-dialog .modal-dialog-header a:hover:after {
       border-bottom: 2px solid red;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-header a:before,
-    .common-dialog-back .common-dialog .common-dialog-header a:after {
+    .modal-dialog-back .modal-dialog .modal-dialog-header a:before,
+    .modal-dialog-back .modal-dialog .modal-dialog-header a:after {
       position: absolute;
       top: 0;
       left: 0;
@@ -138,31 +138,31 @@
       border-bottom: 2px solid #ffffff;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-header a:before {
+    .modal-dialog-back .modal-dialog .modal-dialog-header a:before {
       transform: rotate(45deg);
     }
 
-    .common-dialog-back .common-dialog .common-dialog-header a:after {
+    .modal-dialog-back .modal-dialog .modal-dialog-header a:after {
       transform: rotate(-45deg);
     }
 
-    .common-dialog-back .common-dialog .common-dialog-content {
+    .modal-dialog-back .modal-dialog .modal-dialog-content {
       position: relative;
       max-height: 33em;
       min-width: 12em;
       overflow: auto;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-content>* {
+    .modal-dialog-back .modal-dialog .modal-dialog-content>* {
       margin: 0.3em;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-content div div {
+    .modal-dialog-back .modal-dialog .modal-dialog-content div div {
       display: inline-block;
       width: 12em;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-content div input {
+    .modal-dialog-back .modal-dialog .modal-dialog-content div input {
       width: calc(100% - 16em);
       background: #f3f3f3;
       border: none;
@@ -170,12 +170,12 @@
       outline: none;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-content .mock-setting-Panel p:hover {
+    .modal-dialog-back .modal-dialog .modal-dialog-content .mock-setting-Panel p:hover {
       background: #d3d3d3;
       color: white;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-message {
+    .modal-dialog-back .modal-dialog .modal-dialog-message {
       position: relative;
       width: calc(100% - 1rem);
       height: 100%;
@@ -188,26 +188,26 @@
       outline: none;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-footer {
+    .modal-dialog-back .modal-dialog .modal-dialog-footer {
       position: relative;
       border-top: 1px solid #d3d3d3;
       text-align: center;
       padding: 5px;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-footer a {
+    .modal-dialog-back .modal-dialog .modal-dialog-footer a {
       border: 1px solid #666699;
       margin: 2px 1em;
       padding: 1px;
       cursor: pointer;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-footer a:hover {
+    .modal-dialog-back .modal-dialog .modal-dialog-footer a:hover {
       opacity: 0.8;
       color: #00aaef;
     }
 
-    .common-dialog-back .common-dialog .common-dialog-content .loading {
+    .modal-dialog-back .modal-dialog .modal-dialog-content .loading {
       animation: flicket 1s infinite;
     }
 
@@ -215,7 +215,7 @@
       position: fixed;
       z-index: 9999;
       top: 50%;
-      transform: translate(-50%, -50%) rotate(90%);
+      transform: translate(-50%, -50%) rotate(90deg);
       cursor: pointer;
       border-radius: 6px;
       border: 1px solid #00aaef;
@@ -300,7 +300,7 @@
     Object.keys(window.$data).forEach(function (key) {
       panel.appendChild(createGroup(key, window.$data[key].filter(function (i) {
         if (/^:/.test(key)) { return true; }
-        return !Object.keys(window.$data).flter(function (f) {
+        return !Object.keys(window.$data).filter(function (f) {
           return /^:/.test(f) && window.$data[f].filter(function (item) {
             return i.method === item.method && i.url === item.url;
           });
@@ -314,7 +314,7 @@
       var content = document.createElement('div');
 
       var charCount = 0;
-      Array.prototype.forEach.call('' + filename.file.split(/[\\\/]/).pop(), function (i) {
+      Array.prototype.forEach.call('' + filename.split(/[\\\/]/).pop(), function (i) {
         charCount = charCount + i.charCodeAt();
       });
       fieldset.className = 'config-group';
@@ -361,7 +361,7 @@
       parent.className = 'config-item';
       urlElement.className = 'config-url';
 
-      method.innerHTML = (methodData && methodData[1] || 'GET').toLocaleUpperCase();
+      method.innerHTML = (option.method || 'GET').toLocaleUpperCase();
       method.title = 'set mockTimeout and mockStatus'
       timeout.innerHTML = getMockTimeout() || '';
       status.innerHTML = option.mockStatus || '';
@@ -503,7 +503,7 @@
         mockPanel.className = 'mock-setting-Panel';
         mockStatus.style = 'text-align:center;width:80%;margin:6px 10%;display:flex;justify-content:apace-between;';
         mockTimeout.style = 'text-align:center;width:80%;margin:6px 10%;display:flex;justify-content:apace-between;';
-        mockStatusOption.style = 'width:96%;margin-top:20px;padding:16px;background:#d3d3d3;';
+        mockStatusOption.style = 'width:92%;margin-top:20px;padding:16px;background:#d3d3d3;';
         if(option.config instanceof Array) {
           option.config.forEach(function(oc){
             var cfRow = document.createElement('div');
