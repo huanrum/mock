@@ -149,7 +149,7 @@
     .modal-dialog-back .modal-dialog .modal-dialog-content {
       position: relative;
       max-height: 33em;
-      min-width: 12em;
+      min-width: 22em;
       overflow: auto;
     }
 
@@ -159,11 +159,12 @@
 
     .modal-dialog-back .modal-dialog .modal-dialog-content div div {
       display: inline-block;
-      width: 12em;
+      min-width: 12em;
     }
 
     .modal-dialog-back .modal-dialog .modal-dialog-content div input {
       width: calc(100% - 16em);
+      margin-left: 20px;
       background: #f3f3f3;
       border: none;
       border-bottom: 1px solid #666699;
@@ -368,7 +369,8 @@
       method.appendChild(timeout);
       method.appendChild(status);
       method.style = 'position: relative;color:' + methodColor[(option.method || 'GET').toLocaleUpperCase()];
-      timeout.style = 'position: absolute;top:-8px;color:#d3d3d3;';
+      timeout.style = 'position: absolute;top:-8px;color:#d3d3d3;font-size: 10px;';
+      status.style = 'position: absolute;top:8px;color:#d3d3d3;font-size: 10px;';
 
       url.innerHTML = option.url.split('?').join('<i style="font-size:10px;color:#d3d3d3;">?') + '</i>';
       url.title = 'debug api for mockStatus';
@@ -442,6 +444,7 @@
           paramRow.appendChild(paramInput);
 
           paramRow.style = 'text-align:center;width:80%;margin:6px 10%;display:flex;justify-content:apace-between;';
+          paramInput.style = ''
           paramLabel.innerHTML = param + (/\./.test(param) ? '' : '<strong>*</strong>');
           paramInput.name = param;
           return paramRow;
@@ -456,8 +459,8 @@
         returnElement.style = 'resize:none;width:98%;min-height:200px;margin-top:20px;background:#d3d3d3;';
 
         var urlParams = option.url.match(/(?<=:)[^\/]+/g) || [];
-        var paramList = functionParams.params instanceof Array ? functionParams.params.concat(urlParams) : [];
-        if(functionParams.params && functionParams.params.length) {
+        var paramList = functionParams.parmars instanceof Array ? functionParams.parmars.concat(urlParams) : [];
+        if(functionParams.parmars && functionParams.parmars.length) {
           parmsPanel.title = functionParams.func || '';
         }
         if(paramList.length) {
@@ -512,13 +515,13 @@
             cfRow.appendChild(cfLabel);
             cfRow.appendChild(cfInfo);
             mockStatusOption.appendChild(cfRow);
-            var cfRowStyle = 'display:flex;justify-content:apace-between;border-bottom:1px solid #dddddd;padding-bottom: 6px;';
+            var cfRowStyle = 'display:flex;justify-content: space-between;border-bottom:1px solid #dddddd;padding-bottom: 6px;';
             if(/[=>]/.test(oc.id)) {
               cfRow.style = cfRowStyle + ';color:#999999;';
               cfRow.title = 'This is a judgment mothod, please refer to the key of th source code for the logic';
             } else {
               cfRow.style = cfRowStyle;
-              cfLabel.style = ';cursor:pointer;text-decoration: uuderline #f3f3f3;';
+              cfLabel.style = 'cursor:pointer;text-decoration: underline;color: #f3f3f3;justify-content: space-between;';
               cfRow.onclick = function(){
                 mockStatusInput.value = oc.id;
               };
